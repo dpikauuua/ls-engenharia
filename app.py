@@ -11,7 +11,10 @@ app.secret_key = "ls_engenharia_secret_2024"
 def get_db():
     conn = psycopg2.connect(os.environ.get("DATABASE_URL"), sslmode="require")
     return conn
-
+@app.route("/setup")
+def setup():
+    init_db()
+    return "Banco de dados criado com sucesso!"
 def init_db():
     conn = get_db()
     cur = conn.cursor()
