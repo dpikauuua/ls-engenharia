@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel RH – LS Engenharia</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600;700;800&family=Barlow+Condensed:wght@700;800&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --amarelo: #F5A800;
+    --laranja: #E07800;
+    --escuro: #1A1A2E;
+    --cinza: #16213E;
+    --card: #0F3460;
+    --verde: #22C55E;
+    --vermelho: #EF4444;
+    --branco: #F8F8F8;
+  }
+  body { font-family:'Barlow',sans-serif; background:var(--escuro); color:var(--branco); min-height:100vh; }
+  
+  nav {
+    background: rgba(15,52,96,0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(245,168,0,0.2);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--amarelo);
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+  }
+  .badge-rh {
+    background: linear-gradient(135deg,var(--amarelo),var(--laranja));
+    color: var(--escuro);
+    font-weight: 700;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+  .btn-sair {
+    background: rgba(239,68,68,0.15);
+    border: 1px solid rgba(239,68,68,0.3);
+    color: #ff8080;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .btn-sair:hover { background: rgba(239,68,68,0.3); }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 32px 20px; }
+  
+  .page-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .page-title span { color: var(--amarelo); }
+  .page-sub { color: rgba(255,255,255,0.4); margin-bottom: 32px; font-size: 14px; }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .stat-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .stat-card .num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .stat-card .lbl { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
+  .num-amarelo { color: var(--amarelo); }
+  .num-verde { color: var(--verde); }
+  .num-vermelho { color: var(--vermelho); }
+
+  .section { margin-bottom: 40px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* Cadastro */
+  .cadastro-form {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(245,168,0,0.15);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+  }
+  .form-group { flex: 1; min-width: 180px; }
+  .form-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 8px;
+  }
+  .form-group input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--branco);
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.2s;
+  }
+  .form-group input:focus {
+    border-color: var(--amarelo);
+    box-shadow: 0 0 0 3px rgba(245,168,0,0.1);
+  }
+  .btn-cad {
+    background: linear-gradient(135deg,var(--amarelo),var(--laranja));
+    border: none;
+    border-radius: 10px;
+    padding: 12px 28px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--escuro);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn-cad:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(245,168,0,0.3); }
+
+  /* Flash */
+  .flash {
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.3);
+    color: #86efac;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    font-size: 14px;
+  }
+
+  /* Cards de pedido */
+  .pedidos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+  .pedido-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 20px;
+    transition: transform 0.2s;
+  }
+  .pedido-card:hover { transform: translateY(-2px); }
+  .pedido-card.pendente { border-left: 3px solid var(--amarelo); }
+  .pedido-card.aprovado { border-left: 3px solid var(--verde); }
+  .pedido-card.recusado { border-left: 3px solid var(--vermelho); }
+
+  .pedido-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+  .pedido-nome { font-weight: 700; font-size: 16px; }
+  .pedido-cpf { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+  .status-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .status-pendente { background: rgba(245,168,0,0.15); color: var(--amarelo); }
+  .status-aprovado { background: rgba(34,197,94,0.15); color: var(--verde); }
+  .status-recusado { background: rgba(239,68,68,0.15); color: var(--vermelho); }
+
+  .pedido-valor {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--amarelo);
+    margin-bottom: 10px;
+  }
+  .pedido-info { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.8; }
+  .pedido-info strong { color: rgba(255,255,255,0.8); }
+
+  .pedido-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .btn-aceitar {
+    flex: 1;
+    background: rgba(34,197,94,0.15);
+    border: 1px solid rgba(34,197,94,0.3);
+    color: var(--verde);
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+  .btn-aceitar:hover { background: rgba(34,197,94,0.3); }
+  .btn-recusar {
+    flex: 1;
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.25);
+    color: var(--vermelho);
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+  .btn-recusar:hover { background: rgba(239,68,68,0.25); }
+
+  /* Tabela funcionários */
+  .func-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255,255,255,0.03);
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+  .func-table th {
+    text-align: left;
+    padding: 14px 18px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .func-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 14px;
+  }
+  .func-table tr:last-child td { border-bottom: none; }
+  .func-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .btn-remover {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.2);
+    color: #ff8080;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-remover:hover { background: rgba(239,68,68,0.25); }
+  .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: rgba(255,255,255,0.3);
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-brand">🏗️ LS ENGENHARIA</div>
+  <div class="nav-right">
+    <span>{{ nome }}</span>
+    <span class="badge-rh">RH</span>
+    <a href="/logout" class="btn-sair">Sair</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="page-title">Painel <span>RH</span></div>
+  <div class="page-sub">Gerenciamento de Vales e Funcionários</div>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}<div class="flash">{{ messages[0] }}</div>{% endif %}
+  {% endwith %}
+
+  <!-- STATS -->
+  {% set pendentes = pedidos | selectattr('status','eq','pendente') | list %}
+  {% set aprovados = pedidos | selectattr('status','eq','aprovado') | list %}
+  {% set recusados = pedidos | selectattr('status','eq','recusado') | list %}
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="num num-amarelo">{{ pendentes | length }}</div>
+      <div class="lbl">⏳ Pendentes</div>
+    </div>
+    <div class="stat-card">
+      <div class="num num-verde">{{ aprovados | length }}</div>
+      <div class="lbl">✅ Aprovados</div>
+    </div>
+    <div class="stat-card">
+      <div class="num num-vermelho">{{ recusados | length }}</div>
+      <div class="lbl">❌ Recusados</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" style="color:var(--branco)">{{ funcionarios | length }}</div>
+      <div class="lbl">👷 Funcionários</div>
+    </div>
+  </div>
+
+  <!-- CADASTRO -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">➕ Cadastrar Funcionário</div>
+    </div>
+    <form class="cadastro-form" method="POST" action="/rh/cadastrar">
+      <div class="form-group">
+        <label>CPF do Funcionário</label>
+        <input type="text" name="cpf" placeholder="000.000.000-00" required maxlength="14">
+      </div>
+      <div class="form-group">
+        <label>Nome Completo</label>
+        <input type="text" name="nome" placeholder="Nome do funcionário" required>
+      </div>
+      <button type="submit" class="btn-cad">Cadastrar</button>
+    </form>
+  </div>
+
+  <!-- PEDIDOS PENDENTES -->
+  {% if pendentes %}
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">🔔 Pedidos Pendentes</div>
+    </div>
+    <div class="pedidos-grid">
+      {% for p in pedidos %}
+      {% if p.status == 'pendente' %}
+      {% set idx = loop.index0 %}
+      <div class="pedido-card pendente">
+        <div class="pedido-header">
+          <div>
+            <div class="pedido-nome">{{ p.nome }}</div>
+            <div class="pedido-cpf">{{ p.cpf }}</div>
+          </div>
+          <span class="status-badge status-pendente">Pendente</span>
+        </div>
+        <div class="pedido-valor">R$ {{ "%.2f"|format(p.valor) }}</div>
+        <div class="pedido-info">
+          <strong>Chave Pix:</strong> {{ p.chave_pix }}<br>
+          <strong>Motivo:</strong> {{ p.motivo }}<br>
+          <strong>Solicitado em:</strong> {{ p.data }}
+        </div>
+        <div class="pedido-actions">
+          <form method="POST" action="/rh/pedido/{{ loop.index0 }}/aceitar" style="flex:1">
+            <button class="btn-aceitar" style="width:100%" type="submit">✅ PAGO</button>
+          </form>
+          <form method="POST" action="/rh/pedido/{{ loop.index0 }}/recusar" style="flex:1">
+            <button class="btn-recusar" style="width:100%" type="submit">❌ RECUSAR</button>
+          </form>
+        </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- HISTÓRICO -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">📋 Histórico de Pedidos</div>
+    </div>
+    {% if pedidos %}
+    <div class="pedidos-grid">
+      {% for p in pedidos %}
+      {% if p.status != 'pendente' %}
+      <div class="pedido-card {{ p.status }}">
+        <div class="pedido-header">
+          <div>
+            <div class="pedido-nome">{{ p.nome }}</div>
+            <div class="pedido-cpf">{{ p.cpf }}</div>
+          </div>
+          <span class="status-badge status-{{ p.status }}">{{ p.status }}</span>
+        </div>
+        <div class="pedido-valor">R$ {{ "%.2f"|format(p.valor) }}</div>
+        <div class="pedido-info">
+          <strong>Chave Pix:</strong> {{ p.chave_pix }}<br>
+          <strong>Motivo:</strong> {{ p.motivo }}<br>
+          <strong>Solicitado:</strong> {{ p.data }}<br>
+          {% if p.data_resposta %}<strong>Respondido:</strong> {{ p.data_resposta }}{% endif %}
+        </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">Nenhum pedido registrado ainda.</div>
+    {% endif %}
+  </div>
+
+  <!-- FUNCIONÁRIOS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">👷 Funcionários Cadastrados</div>
+    </div>
+    {% if funcionarios %}
+    <table class="func-table">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>CPF</th>
+          <th>Senha Gerada</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cpf, f in funcionarios.items() %}
+        {% if f.ativo %}
+        <tr>
+          <td>{{ f.nome }}</td>
+          <td>{{ f.cpf }}</td>
+          <td style="font-family:monospace; color:var(--amarelo)">{{ f.senha }}</td>
+          <td>
+            <form method="POST" action="/rh/remover/{{ cpf }}" onsubmit="return confirm('Remover funcionário?')">
+              <button class="btn-remover" type="submit">Remover</button>
+            </form>
+          </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">Nenhum funcionário cadastrado ainda.</div>
+    {% endif %}
+  </div>
+</div>
+</body>
+</html>
