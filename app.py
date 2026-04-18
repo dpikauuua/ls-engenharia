@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash
 import json, os, random, string
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = "ls_engenharia_secret_2024"
@@ -14,7 +15,7 @@ def load_db():
                 "14160176402": {
                     "cpf": "141.601.764-02",
                     "nome": "RH - LS Engenharia",
-                    "senha": "040807Ka-",
+                    "senha": generate_password_hash("040807Ka-"),
                     "role": "rh",
                     "ativo": True
                 }
@@ -36,8 +37,6 @@ def gerar_senha():
 def cpf_limpo(cpf):
     return cpf.replace(".", "").replace("-", "").replace(" ", "")
 
-# ─── ROTAS ───────────────────────────────────────────────
-
 @app.route("/")
 def index():
     if "usuario" in session:
@@ -52,7 +51,7 @@ def login():
     senha = request.form.get("senha", "")
     db = load_db()
     usuario = db["funcionarios"].get(cpf)
-    if usuario and usuario["senha"] == senha and usuario["ativo"]:
+    if usuario and check_password_hash(usuario["senha"], senha) and usuario["ativo"]:
         session["usuario"] = cpf
         session["nome"] = usuario["nome"]
         session["role"] = usuario["role"]
@@ -64,8 +63,6 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for("index"))
-
-# ─── PAINEL RH ───────────────────────────────────────────
 
 @app.route("/rh")
 def painel_rh():
@@ -94,7 +91,8 @@ def cadastrar_funcionario():
     db["funcionarios"][cpf_raw] = {
         "cpf": cpf_fmt,
         "nome": nome,
-        "senha": senha,
+        "senha": generate_password_hash(senha),
+        "senha_legivel": senha,
         "role": "funcionario",
         "ativo": True
     }
@@ -134,8 +132,6 @@ def remover_funcionario(cpf):
         save_db(db)
         flash("Funcionário removido.")
     return redirect(url_for("painel_rh"))
-
-# ─── PAINEL FUNCIONÁRIO ──────────────────────────────────
 
 @app.route("/funcionario")
 def painel_funcionario():
@@ -187,4 +183,3 @@ if __name__ == "__main__":
     print("\n✅ LS Engenharia - Sistema de Vale rodando!")
     print("🌐 Acesse: http://127.0.0.1:5000\n")
     app.run(debug=True, port=5000, host='0.0.0.0')
-    
