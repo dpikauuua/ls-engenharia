@@ -3,35 +3,10 @@
     "14160176402": {
       "cpf": "141.601.764-02",
       "nome": "RH - LS Engenharia",
-      "senha": "040807Ka-",
-      "role": "rh",
-      "ativo": true
-    },
-    "10497627469": {
-      "cpf": "104.976.274-69",
-      "nome": "francisco lira",
-      "senha": "12345",
-      "role": "funcionario",
-      "ativo": true
-    },
-    "16433491989": {
-      "cpf": "164.334.919-89",
-      "nome": "kauan Jenson",
-      "senha": "12345",
+      "senha": "scrypt:32768:8:1$G94LFDyje9HW2Har$00f36713da40b7d77c4fc369126988c2ab90ac39875ba625c42452c6ae8f950e7b5cdb26617aa9b3657837e7bcae451911328142a5704a9551ab836dbb72eba0",
       "role": "rh",
       "ativo": true
     }
   },
-  "pedidos": [
-    {
-      "cpf": "10497627469",
-      "nome": "francisco lira",
-      "valor": 400.0,
-      "chave_pix": "141.601.764.02",
-      "motivo": "transporte",
-      "status": "aprovado",
-      "data": "17/04/2026 16:54",
-      "data_resposta": "17/04/2026 18:29"
-    }
-  ]
+  "pedidos": []
 }
