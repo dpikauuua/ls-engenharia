@@ -465,7 +465,7 @@
         <tr>
           <td>{{ f.nome }}</td>
           <td>{{ f.cpf }}</td>
-          <td style="font-family:monospace; color:var(--amarelo)">{{ f.senha }}</td>
+          <td style="font-family:monospace; color:var(--amarelo)">{{ f.senha_legivel }}</td>
           <td>
             <form method="POST" action="/rh/remover/{{ cpf }}" onsubmit="return confirm('Remover funcionário?')">
               <button class="btn-remover" type="submit">Remover</button>
